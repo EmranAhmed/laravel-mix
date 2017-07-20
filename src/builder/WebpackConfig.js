@@ -1,9 +1,10 @@
 let webpack = require('webpack');
 
 let webpackDefaultConfig = require('./webpack-default');
-let webpackEntry = require('./webpack-entry');
-let webpackRules = require('./webpack-rules');
-let webpackPlugins = require('./webpack-plugins');
+let webpackEntry         = require('./webpack-entry');
+let webpackRules         = require('./webpack-rules');
+let webpackPlugins       = require('./webpack-plugins');
+let path                 = require('path');
 
 process.noDeprecation = true;
 
@@ -15,7 +16,6 @@ class WebpackConfig {
         this.webpackConfig = webpackDefaultConfig();
     }
 
-
     /**
      * Build the Webpack configuration object.
      */
@@ -25,17 +25,18 @@ class WebpackConfig {
             .buildRules()
             .buildPlugins()
             .buildResolving()
+            .buildResolveLoader()
+            .buildExternals()
             .mergeCustomConfig();
 
         return this.webpackConfig;
     }
 
-
     /**
      * Build the entry object.
      */
     buildEntry() {
-        let { entry, extractions } = webpackEntry();
+        let {entry, extractions} = webpackEntry();
 
         this.webpackConfig.entry = entry;
 
@@ -45,8 +46,8 @@ class WebpackConfig {
         if (extractions.length) {
             this.webpackConfig.plugins.push(
                 new webpack.optimize.CommonsChunkPlugin({
-                    names: extractions,
-                    minChunks: Infinity
+                    names     : extractions,
+                    minChunks : Infinity
                 })
             );
         }
@@ -54,36 +55,33 @@ class WebpackConfig {
         return this;
     }
 
-
     /**
      * Build the output object.
      */
     buildOutput() {
-         let http = process.argv.includes('--https') ? 'https' : 'http';
+        let http = process.argv.includes('--https') ? 'https' : 'http';
 
         this.webpackConfig.output = {
-            path: path.resolve(Mix.isUsing('hmr') ? '/' : Config.publicPath),
-            filename: '[name].js',
-            chunkFilename: '[name].js',
-            publicPath: Mix.isUsing('hmr') ? (http + '://localhost:8080/') : ''
+            path          : path.resolve(Mix.isUsing('hmr') ? '/' : Config.publicPath),
+            filename      : '[name].js',
+            chunkFilename : '[name].js',
+            publicPath    : Mix.isUsing('hmr') ? (http + '://localhost:8080/') : ''
         };
 
         return this;
     }
 
-
     /**
      * Build the rules array.
      */
     buildRules() {
-        let { rules, extractPlugins } = webpackRules();
+        let {rules, extractPlugins} = webpackRules();
 
         this.webpackConfig.module.rules = this.webpackConfig.module.rules.concat(rules);
-        this.webpackConfig.plugins = this.webpackConfig.plugins.concat(extractPlugins);
+        this.webpackConfig.plugins      = this.webpackConfig.plugins.concat(extractPlugins);
 
         return this;
     }
-
 
     /**
      * Build the plugins array.
@@ -95,7 +93,6 @@ class WebpackConfig {
 
         return this;
     }
-
 
     /**
      * Build the resolve object.
@@ -110,14 +107,36 @@ class WebpackConfig {
         this.webpackConfig.resolve = {
             extensions,
 
-            alias: {
-                'vue$': 'vue/dist/vue.common.js'
+            alias : {
+                'vue$' : 'vue/dist/vue.common.js'
             }
         };
 
         return this;
     }
 
+    buildResolveLoader() {
+        this.webpackConfig.resolveLoader = {
+            modules : [
+                path.resolve(__dirname, "src/loaders"),
+                path.resolve(__dirname, "node_modules")
+            ]
+        };
+        return this;
+    }
+
+    buildExternals() {
+
+        if (Mix.sees('wordpress')) {
+            this.webpackConfig.externals = {
+                jquery     : 'jQuery', // var $ = require("jquery");
+                wp         : 'wp',
+                underscore : '_' // var _ = require("underscore");
+            };
+        }
+
+        return this;
+    }
 
     /**
      * Merge the user's custom Webpack configuration.

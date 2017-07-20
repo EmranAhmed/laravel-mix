@@ -1,10 +1,63 @@
-let Verify = require('./Verify');
-let CopyFilesTask = require('./tasks/CopyFilesTask');
-let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
+let Verify           = require('./Verify');
+let CopyFilesTask    = require('./tasks/CopyFilesTask');
+let ConcatFilesTask  = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
-let glob = require('glob');
+let glob             = require('glob');
+let wpPot            = require('wp-pot');
 
 class Api {
+
+    wpPot(options) {
+
+        let options = Object.assign({}, {
+            lastTranslator : 'Emran Ahmed <emran.bd.08@gmail.com>',
+            team           : 'ThemeHippo <themehippo@gmail.com>',
+            src            : '*.php'
+        }, options);
+
+        wpPot(options);
+
+        return this;
+    }
+
+    banner(banner) {
+
+        let options = Object.assign({}, {
+            banner    : banner,
+            raw       : false,
+            entryOnly : true
+        });
+
+        Config.banner = options;
+
+        return this;
+    }
+
+    notification(options) {
+
+        let options = Object.assign({}, Config.notificationsOptions, options);
+
+        Config.notificationsOptions = options;
+
+        return this;
+    };
+
+    postCssBrowsers(browsers) {
+        Config.postCssBrowsers = browsers;
+        return this;
+    }
+
+    wordpress() {
+        Config.wordpress = true;
+        return this;
+    }
+
+    setResourcePath(path) {
+        Config.resourcePath = path;
+
+        return this;
+    };
+
     /**
      * Register the Webpack entry/output paths.
      *
@@ -14,14 +67,13 @@ class Api {
     js(entry, output) {
         Verify.js(entry, output);
 
-        entry = [].concat(entry).map(file => new File(file));
+        entry  = [].concat(entry).map(file => new File(file));
         output = new File(output);
 
-        Config.js.push({ entry, output });
+        Config.js.push({entry, output});
 
         return this;
     }
-
 
     /**
      * Register support for the React framework.
@@ -40,7 +92,6 @@ class Api {
         return this.js(entry, output);
     };
 
-
     /**
      * Register support for the TypeScript.
      */
@@ -55,14 +106,12 @@ class Api {
         return this.js(entry, output);
     };
 
-
     /**
      * Register support for the TypeScript.
      */
     typeScript(entry, output) {
         return this.ts(entry, output);
     }
-
 
     /**
      * Register Sass compilation.
@@ -73,13 +122,12 @@ class Api {
      */
     sass(src, output, pluginOptions = {}) {
         pluginOptions = Object.assign({
-            precision: 8,
-            outputStyle: 'expanded'
-        }, pluginOptions, { sourceMap: true });
+            precision   : 8,
+            outputStyle : 'expanded'
+        }, pluginOptions, {sourceMap : true});
 
         return this.preprocess('sass', src, output, pluginOptions);
     }
-
 
     /**
      * Register standalone-Sass compilation that will not run through Webpack.
@@ -94,7 +142,6 @@ class Api {
         return this.preprocess('fastSass', src, output, pluginOptions);
     };
 
-
     /**
      * Alias for standaloneSass.
      *
@@ -105,7 +152,6 @@ class Api {
     fastSass(...args) {
         return this.standaloneSass(...args);
     }
-
 
     /**
      * Register Less compilation.
@@ -123,7 +169,6 @@ class Api {
         return this.preprocess('less', src, output, pluginOptions);
     }
 
-
     /**
      * Register Stylus compilation.
      *
@@ -139,7 +184,6 @@ class Api {
 
         return this.preprocess('stylus', src, output, pluginOptions);
     };
-
 
     /**
      * Register a generic CSS preprocessor.
@@ -167,7 +211,6 @@ class Api {
         return this;
     }
 
-
     /**
      * Combine a collection of files.
      *
@@ -180,13 +223,12 @@ class Api {
 
         Verify.combine(src, output);
 
-        let task = new ConcatFilesTask({ src, output, babel });
+        let task = new ConcatFilesTask({src, output, babel});
 
         Mix.addTask(task);
 
         return this;
     };
-
 
     /**
      * Alias for this.Mix.combine().
@@ -197,7 +239,6 @@ class Api {
     scripts(src, output) {
         return this.combine(src, output);
     };
-
 
     /**
      * Identical to this.Mix.combine(), but includes Babel compilation.
@@ -211,7 +252,6 @@ class Api {
         return this;
     };
 
-
     /**
      * Alias for this.Mix.combine().
      *
@@ -221,7 +261,6 @@ class Api {
     styles(src, output) {
         return this.combine(src, output);
     };
-
 
     /**
      * Minify the provided file.
@@ -240,7 +279,6 @@ class Api {
         return this.combine(src, output);
     };
 
-
     /**
      * Copy one or more files to a new location.
      *
@@ -249,14 +287,13 @@ class Api {
      */
     copy(from, to) {
         let task = new CopyFilesTask({
-            from, to: new File(to)
+            from, to : new File(to)
         });
 
         Mix.addTask(task);
 
         return this;
     };
-
 
     /**
      * Copy a directory to a new location. This is identical
@@ -268,7 +305,6 @@ class Api {
     copyDirectory(from, to) {
         return this.copy(from, to);
     };
-
 
     /**
      * Enable Browsersync support for the project.
@@ -283,14 +319,13 @@ class Api {
         );
 
         if (typeof config === 'string') {
-            config = { proxy: config };
+            config = {proxy : config};
         }
 
         Config.browserSync = config;
 
         return this;
     };
-
 
     /**
      * Enable automatic file versioning.
@@ -305,21 +340,20 @@ class Api {
                 filePath += (path.sep + '**/*');
             }
 
-            if (! filePath.includes('*')) return filePath;
+            if (!filePath.includes('*')) return filePath;
 
             return glob.sync(
                 new File(filePath).forceFromPublic().relativePath(),
-                { nodir: true }
+                {nodir : true}
             );
         }));
 
         Mix.addTask(
-            new VersionFilesTask({ files })
+            new VersionFilesTask({files})
         );
 
         return this;
     }
-
 
     /**
      * Register vendor libs that should be extracted.
@@ -329,11 +363,10 @@ class Api {
      * @param {string} output
      */
     extract(libs, output) {
-        Config.extractions.push({ libs, output });
+        Config.extractions.push({libs, output});
 
         return this;
     };
-
 
     /**
      * Enable sourcemap support.
@@ -352,7 +385,6 @@ class Api {
         return this;
     };
 
-
     /**
      * Override the default path to your project's public directory.
      *
@@ -363,7 +395,6 @@ class Api {
 
         return this;
     }
-
 
     /**
      * Set a prefix for all generated asset paths.
@@ -391,13 +422,12 @@ class Api {
      */
     disableSuccessNotifications() {
         Config.notifications = {
-            onSuccess: false,
-            onFailure: true
+            onSuccess : false,
+            onFailure : true
         };
 
         return this;
     };
-
 
     /**
      * Register libraries to automatically "autoload" when
@@ -419,7 +449,6 @@ class Api {
         return this;
     };
 
-
     /**
      * Merge custom config with the provided webpack.config file.
      *
@@ -430,7 +459,6 @@ class Api {
 
         return this;
     }
-
 
     /* Set Mix-specific options.
      *
@@ -452,7 +480,6 @@ class Api {
         return this;
     };
 
-
     /**
      * Register a Webpack build event handler.
      *
@@ -464,14 +491,12 @@ class Api {
         return this;
     }
 
-
     /**
      * Helper for determining a production environment.
      */
     inProduction() {
         return Mix.inProduction();
     }
-
 
     /**
      * Generate a full output path, using a fallback

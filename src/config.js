@@ -1,87 +1,81 @@
-let paths = new (require('./Paths'));
+let paths        = new (require('./Paths'));
 let webpackMerge = require('webpack-merge');
+let autoprefixer = require('autoprefixer');
 
 module.exports = function () {
     return {
+
+        banner : {},
+
         /**
          * Determine if webpack should be triggered in a production environment.
          *
          * @type {Booolean}
          */
-        production: (process.env.NODE_ENV === 'production' || process.argv.includes('-p')),
-
+        production : (process.env.NODE_ENV === 'production' || process.argv.includes('-p')),
 
         /**
          * The list of scripts to bundle.
          *
          * @type {Array}
          */
-        js: [],
-
+        js : [],
 
         /**
          * A list of custom assets that are being compiled outside of Webpack.
          *
          * @type {Array}
          */
-        customAssets: [],
-
+        customAssets : [],
 
         /**
          * The list of vendor chunks to extract.
          *
          * @type {Array}
          */
-        extractions: [],
-
+        extractions : [],
 
         /**
          * A list of CSS preprocessing to be performed.
          *
          * @type {Object}
          */
-        preprocessors: {},
-
+        preprocessors : {},
 
         /**
          * Does the project require React support?
          *
          * @type {Boolean}
          */
-        react: false,
-
+        react : false,
 
         /**
          * Does the project require TypeScript support?
          *
          * @type {Boolean}
          */
-        typeScript: false,
-
+        typeScript : false,
 
         /**
          * A list of variables that should be autoloaded by webpack.
          *
          * @type {Object}
          */
-        autoload: {},
-
+        autoload : {},
 
         /**
          * Does the project require BrowserSync support?
          *
          * @type {Boolean}
          */
-        browserSync: false,
-
+        browserSync : false,
 
         /**
          * Determine if we should enable hot reloading.
          *
          * @type {Boolean}
          */
-        hmr: process.argv.includes('--hot'),
-
+        hmr : process.argv.includes('--hot'),
 
         /**
          * PostCSS plugins to be applied to compiled CSS.
@@ -90,8 +84,31 @@ module.exports = function () {
          *
          * @type {Array}
          */
-        postCss: [],
+        postCssBrowsers : [
+            'last 3 versions',
+            '> 1%',
+            'ie >= 9',
+            'ie_mob >= 10',
+            'ff >= 30',
+            'chrome >= 34',
+            'safari >= 7',
+            'opera >= 23',
+            'ios >= 7',
+            'android >= 4',
+            'bb >= 10'
+        ],
 
+        postCss : [autoprefixer({browsers : this.postCssBrowsers})],
+
+        resourcePath : '../../',
+
+        wordpress : false,
+
+        notificationsOptions : {
+            title        : 'Laravel Mix',
+            alwaysNotify : this.notifications.onSuccess,
+            contentImage : Mix.paths.root('node_modules/laravel-mix/icons/laravel.png')
+        },
 
         /**
          * Determine if Mix should remove unused selectors from your CSS bundle.
@@ -101,84 +118,76 @@ module.exports = function () {
          *
          * @type {Boolean|object}
          */
-        purifyCss: false,
-
+        purifyCss : false,
 
         /**
          * The public path for the build.
          *
          * @type {String}
          */
-        publicPath: '',
-
+        publicPath : '',
 
         /**
          * Does the project require React support?
          *
          * @type {Boolean}
          */
-        versioning: false,
-
+        versioning : false,
 
         /**
          * Determine if error notifications should be displayed for each build.
          *
          * @type {Boolean}
          */
-        notifications: {
-            onSuccess: true,
-            onFailure: true
+        notifications : {
+            onSuccess : true,
+            onFailure : true
         },
-
 
         /**
          * Determine if sourcemaps should be created for the build.
          *
          * @type {Boolean}
          */
-        sourcemaps: false,
-
+        sourcemaps : false,
 
         /**
          * The resource root for the build.
          *
          * @type {String}
          */
-        resourceRoot: '/',
-
+        resourceRoot : '/',
 
         /**
          * vue-loader specific options.
          *
          * @type {Object}
          */
-        vue: {
-            preLoaders: {},
-            postLoaders: {}
+        vue : {
+            preLoaders  : {},
+            postLoaders : {}
         },
-
 
         /**
-        * Image Loader defaults.
-        * See: https://github.com/thetalecrafter/img-loader#options
-        *
-        * @type {Object}
-        */
-        imgLoaderOptions: {
-            enabled: true,
-            gifsicle: {},
-            mozjpeg: {},
-            optipng: {},
-            svgo: {},
+         * Image Loader defaults.
+         * See: https://github.com/thetalecrafter/img-loader#options
+         *
+         * @type {Object}
+         */
+        imgLoaderOptions : {
+            enabled  : true,
+            gifsicle : {},
+            mozjpeg  : {},
+            optipng  : {},
+            svgo     : {},
         },
-
 
         /**
          * The default Babel configuration.
          *
          * @type {Object}
          */
-        babel: function () {
+        babel : function () {
             let options = {};
 
             tap(Mix.paths.root('.babelrc'), babelrc => {
@@ -188,13 +197,13 @@ module.exports = function () {
             });
 
             let defaultOptions = {
-                cacheDirectory: true,
-                presets: [
+                cacheDirectory : true,
+                presets        : [
                     ['env', {
-                        'modules': false,
-                        'targets': {
-                            'browsers': ['> 2%'],
-                            uglify: true
+                        'modules' : false,
+                        'targets' : {
+                            'browsers' : ['> 2%'],
+                            uglify     : true
                         }
                     }]
                 ]
@@ -212,8 +221,7 @@ module.exports = function () {
          *
          * @type {Boolean}
          */
-        processCssUrls: true,
-
+        processCssUrls : true,
 
         /**
          * Whether to extract .vue component styles into a dedicated file.
@@ -221,8 +229,7 @@ module.exports = function () {
          *
          * @type {Boolean|string}
          */
-        extractVueStyles: false,
-
+        extractVueStyles : false,
 
         /**
          * Uglify-specific settings for Webpack.
@@ -231,17 +238,16 @@ module.exports = function () {
          *
          * @type {Object}
          */
-        uglify: {
-            sourceMap: true,
-            compress: {
-                warnings: false,
-                drop_console: true,
+        uglify : {
+            sourceMap : false,
+            compress  : {
+                warnings     : false,
+                drop_console : true,
             },
-            output: {
-                comments: false
+            output    : {
+                comments : false
             }
         },
-
 
         /**
          * CleanCss-specific settings for Webpack.
@@ -250,16 +256,14 @@ module.exports = function () {
          *
          * @type {Object}
          */
-        cleanCss: {},
-
+        cleanCss : {},
 
         /**
          * Custom Webpack-specific configuration to merge/override Mix's.
          *
          * @type {Object}
          */
-        webpackConfig: {},
-
+        webpackConfig : {},
 
         /**
          * Determine if Mix should ask the friendly errors plugin to
@@ -269,8 +273,7 @@ module.exports = function () {
          *
          * @type {Boolean}
          */
-        clearConsole: true,
-
+        clearConsole : true,
 
         /**
          * Merge the given options with the current defaults.
