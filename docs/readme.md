@@ -26,5 +26,5 @@
 * [jQuery UI](jquery-ui.md)
 
 ## Advanced Configuration
-* [Laravel Mix Options](options.md)
+* [WP Mix Options](options.md)
 

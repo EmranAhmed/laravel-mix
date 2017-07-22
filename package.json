@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JeffreyWay/laravel-mix.git"
+    "url": "git+https://github.com/EmranAhmed/wp-mix.git"
   },
   "bugs": {
     "url": "https://github.com/JeffreyWay/laravel-mix/issues"
   },
-  "homepage": "https://github.com/JeffreyWay/laravel-mix#readme",
+  "homepage": "https://github.com/EmranAhmed/wp-mix#readme",
   "keywords": [
     "laravel",
     "wordpress",
