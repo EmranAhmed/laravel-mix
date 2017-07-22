@@ -1,6 +1,5 @@
 let webpack           = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let path              = require('path');
 
 module.exports = function () {
     let rules          = [];
@@ -60,7 +59,7 @@ module.exports = function () {
     // Add support for loading images.
     rules.push({
         test    : /\.(png|jpe?g|gif)$/,
-        exclude : path.resolve(__dirname, "images"),
+        exclude : Mix.paths.root('images'),
         loaders : [
             {
                 loader  : 'file-loader',
@@ -76,7 +75,8 @@ module.exports = function () {
                                     /((.*(node_modules|bower_components))|images|image|img|assets|src)\//g, ''
                                 ) + '?[hash]';
                     },
-                    publicPath : Mix.sees('wordpress') ? Config.resourcePath : Config.resourceRoot
+                    //publicPath: Config.resourceRoot
+                    publicPath : Config.assetPublicPath
                 }
             },
 
@@ -87,20 +87,24 @@ module.exports = function () {
         ]
     });
 
-    // Add support for local loading images.
+    // Add support for loading images local.
+
     rules.push({
         test    : /\.(png|jpe?g|gif)$/,
-        include : path.resolve(__dirname, "images"),
+        include : Mix.paths.root('images'),
         loaders : [
             {
                 loader  : 'ignore-files-loader',
                 options : {
+
                     name       : path => {
                         return 'images/[name].[ext]?[hash]';
                     },
-                    publicPath : Mix.sees('wordpress') ? Config.resourcePath : Config.resourceRoot
+                    //publicPath: Config.resourceRoot
+                    publicPath : Config.assetPublicPath
                 }
             },
+
             {
                 loader  : 'img-loader',
                 options : Config.imgLoaderOptions
@@ -111,7 +115,6 @@ module.exports = function () {
     // Add support for loading fonts.
     rules.push({
         test    : /\.(woff2?|ttf|eot|svg|otf)$/,
-        exclude : path.resolve(__dirname, "fonts"),
         loader  : 'file-loader',
         options : {
             name       : path => {
@@ -122,10 +125,11 @@ module.exports = function () {
                 return 'fonts/' + path
                         .replace(/\\/g, '/')
                         .replace(
-                            /((.*(node_modules|bower_components))|fonts|font|assets)\//g, ''
+                            /((.*(node_modules|bower_components))|fonts|font|assets|src)\//g, ''
                         ) + '?[hash]';
             },
-            publicPath : Mix.sees('wordpress') ? Config.resourcePath : Config.resourceRoot
+            //publicPath: Config.resourceRoot,
+            publicPath : Config.assetPublicPath
         }
     });
 
@@ -135,7 +139,8 @@ module.exports = function () {
         loader  : 'file-loader',
         options : {
             name       : '[name].[ext]?[hash]',
-            publicPath : Mix.sees('wordpress') ? Config.resourcePath : Config.resourceRoot
+            //publicPath : Config.resourceRoot
+            publicPath : Config.assetPublicPath
         }
     });
 
@@ -164,9 +169,11 @@ module.exports = function () {
                         options : {
                             sourceMap : (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
                             ident     : 'postcss',
-                            plugins   : [
-                                require('autoprefixer')
-                            ].concat(Config.postCss)
+                            /*plugins   : [
+                             require('autoprefixer')
+                             ].concat(Config.postCss)*/
+
+                            plugins : Config.postCss
                         }
                     },
                 ];
@@ -203,7 +210,7 @@ module.exports = function () {
     let vueExtractPlugin;
 
     if (Config.extractVueStyles) {
-        vueExtractPlugin = extractPlugins.length ? extractPlugins[0] : new ExtractTextPlugin('vue-styles.css');
+        vueExtractPlugin = typeof(Config.extractVueStyles) === "boolean" ? new ExtractTextPlugin('vue-styles.css') : new ExtractTextPlugin(Config.extractVueStyles);
     }
 
     rules.push({
@@ -256,7 +263,7 @@ module.exports = function () {
 
     // If there were no existing extract text plugins to add our
     // Vue styles extraction too, we'll push a new one in.
-    if (Config.extractVueStyles && !extractPlugins.length) {
+    if (Config.extractVueStyles) {
         extractPlugins.push(vueExtractPlugin);
     }
 

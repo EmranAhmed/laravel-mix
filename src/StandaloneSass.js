@@ -117,9 +117,9 @@ class StandaloneSass {
 
         if (Config.notifications.onSuccess) {
             notifier.notify({
-                title: 'Laravel Mix',
+                title: 'WP Mix',
                 message: 'Sass Compilation Successful',
-                contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+                contentImage: 'node_modules/wp-mix/icons/pass.png'
             });
         }
     }
@@ -140,10 +140,10 @@ class StandaloneSass {
 
         if (Mix.isUsing('notifications')) {
             notifier.notify({
-                title: 'Laravel Mix',
+                title: 'WP Mix',
                 subtitle: 'Sass Compilation Failed',
                 message: JSON.parse(output).message,
-                contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+                contentImage: 'node_modules/wp-mix/icons/fail.png'
             });
         }
 

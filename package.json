@@ -1,7 +1,7 @@
 {
-  "name": "laravel-mix",
-  "version": "1.2.2",
-  "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
+  "name": "wp-mix",
+  "version": "1.0.0",
+  "description": "WP Mix is a fork of Laravel Mix which is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
     "webpack": "NODE_ENV=development webpack --progress --hide-modules",
@@ -21,9 +21,11 @@
   "homepage": "https://github.com/JeffreyWay/laravel-mix#readme",
   "keywords": [
     "laravel",
+    "wordpress",
     "webpack",
     "laravel elixir",
-    "laravel mix"
+    "laravel mix",
+    "wp mix"
   ],
   "author": "Jeffrey Way",
   "license": "MIT",
@@ -65,6 +67,7 @@
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "ava": "^0.19.1",
+    "babel-plugin-dynamic-import-node": "^1.0.2",
     "mock-fs": "^4.3.0",
     "mock-require": "^2.0.2",
     "nyc": "^10.3.2",

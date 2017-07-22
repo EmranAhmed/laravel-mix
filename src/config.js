@@ -1,11 +1,34 @@
 let paths        = new (require('./Paths'));
 let webpackMerge = require('webpack-merge');
-let autoprefixer = require('autoprefixer');
 
 module.exports = function () {
     return {
 
-        banner : {},
+        commonChunkFileName : 'manifest',
+
+        assetPublicPath : '../../',
+
+        notificationConfig : {},
+
+        postCssBrowsers : [
+            'last 3 versions',
+            '> 1%',
+            'ie >= 9',
+            'ie_mob >= 10',
+            'ff >= 30',
+            'chrome >= 34',
+            'safari >= 7',
+            'opera >= 23',
+            'ios >= 7',
+            'android >= 4',
+            'bb >= 10'
+        ],
+
+        bannerConfig : {
+            banner    : "",
+            raw       : false,
+            entryOnly : true
+        },
 
         /**
          * Determine if webpack should be triggered in a production environment.
@@ -84,31 +107,8 @@ module.exports = function () {
          *
          * @type {Array}
          */
-        postCssBrowsers : [
-            'last 3 versions',
-            '> 1%',
-            'ie >= 9',
-            'ie_mob >= 10',
-            'ff >= 30',
-            'chrome >= 34',
-            'safari >= 7',
-            'opera >= 23',
-            'ios >= 7',
-            'android >= 4',
-            'bb >= 10'
-        ],
 
-        postCss : [autoprefixer({browsers : this.postCssBrowsers})],
-
-        resourcePath : '../../',
-
-        wordpress : false,
-
-        notificationsOptions : {
-            title        : 'Laravel Mix',
-            alwaysNotify : this.notifications.onSuccess,
-            contentImage : Mix.paths.root('node_modules/laravel-mix/icons/laravel.png')
-        },
+        postCss : [require('autoprefixer')({browsers : this.postCssBrowsers})],
 
         /**
          * Determine if Mix should remove unused selectors from your CSS bundle.
@@ -139,10 +139,14 @@ module.exports = function () {
          *
          * @type {Boolean}
          */
-        notifications : {
-            onSuccess : true,
-            onFailure : true
-        },
+        notifications : true,
+
+        /**
+         * Determine if we should always show success notifications.
+         *
+         * @type {Boolean}
+         */
+        notificationsOnSuccess : true,
 
         /**
          * Determine if sourcemaps should be created for the build.
@@ -206,7 +210,8 @@ module.exports = function () {
                             uglify     : true
                         }
                     }]
-                ]
+                ],
+                plugins        : ["dynamic-import-node"]
             };
 
             if (this.react) {
@@ -239,7 +244,7 @@ module.exports = function () {
          * @type {Object}
          */
         uglify : {
-            sourceMap : false,
+            sourceMap : true,
             compress  : {
                 warnings     : false,
                 drop_console : true,

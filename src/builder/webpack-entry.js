@@ -1,7 +1,6 @@
 let Entry = require('./Entry');
 let entry;
 
-
 // We'll start by filtering through all the JS compilation
 // requests from the user, and building up the main entry
 // object for Webpack.
@@ -14,11 +13,11 @@ function addScripts() {
                 js.entry[0]
             );
         });
-    } else {
+    }
+    else {
         entry.addDefault();
     }
 }
-
 
 // Next, we'll append any requested vendor library extractions.
 function addVendors() {
@@ -27,12 +26,11 @@ function addVendors() {
     // If we are extracting vendor libraries, then we also need
     // to extract Webpack's manifest file to assist with caching.
     if (extractions.length) {
-        extractions.push(path.join(entry.base, 'manifest'));
+        extractions.push(path.join(entry.base, Config.commonChunkFileName));
     }
 
     return extractions;
 }
-
 
 // Finally, we'll append all Sass/Less/Stylus references,
 // and they'll neatly be extracted to their own files.
@@ -44,7 +42,6 @@ function addStylesheets() {
     });
 }
 
-
 module.exports = function () {
     entry = new Entry();
 
@@ -53,7 +50,7 @@ module.exports = function () {
     addStylesheets();
 
     return {
-        entry: entry.get(),
+        entry : entry.get(),
         extractions
     };
 };

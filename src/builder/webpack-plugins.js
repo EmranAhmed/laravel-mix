@@ -12,11 +12,6 @@ let SmartBannerPlugin           = require('smart-banner-webpack-plugin');
 module.exports = function () {
     let plugins = [];
 
-    // BannerPlugin
-    plugins.push(
-        new SmartBannerPlugin(Config.banner)
-    );
-
     // Activate better error feedback in the console.
     plugins.push(
         new FriendlyErrorsWebpackPlugin({clearConsole : Config.clearConsole})
@@ -27,7 +22,12 @@ module.exports = function () {
         new webpack.ProvidePlugin(Config.autoload)
     );
 
+    plugins.push(
+        new SmartBannerPlugin(Config.bannerConfig)
+    );
+
     // Add support for webpack 3 scope hoisting.
+    // Current disabled due to: https://github.com/webpack/webpack/issues/5132
     plugins.push(
         new webpack.optimize.ModuleConcatenationPlugin()
     );
@@ -53,7 +53,7 @@ module.exports = function () {
         let WebpackNotifierPlugin = require('webpack-notifier');
 
         plugins.push(
-            new WebpackNotifierPlugin(Config.notificationsOptions)
+            new WebpackNotifierPlugin(Config.notificationConfig)
         );
     }
 
@@ -66,12 +66,11 @@ module.exports = function () {
                 Object.assign({
                     host  : 'localhost',
                     port  : 3000,
-                    proxy : 'app.dev',
+                    proxy : 'wp.dev',
                     files : [
-                        'app/**/*.php',
-                        'resources/views/**/*.php',
-                        'public/js/**/*.js',
-                        'public/css/**/*.css'
+                        '*.php',
+                        'assets/js/**/*.js',
+                        'assets/css/**/*.css'
                     ]
                 }, Config.browserSync),
                 {reload : false}
@@ -103,7 +102,6 @@ module.exports = function () {
     plugins.push(new webpack.LoaderOptionsPlugin({
         minimize : Mix.inProduction(),
         options  : {
-            postcss : Config.postCss,
             context : __dirname,
             output  : {path : './'}
         }

@@ -3,16 +3,20 @@ let CopyFilesTask    = require('./tasks/CopyFilesTask');
 let ConcatFilesTask  = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
 let glob             = require('glob');
+let _                = require('lodash');
 let wpPot            = require('wp-pot');
 
 class Api {
 
-    wpPot(options) {
-
-        let options = Object.assign({}, {
+    generatePot(options) {
+        options = Object.assign({
+            //package        : 'ultimate-page-builder',
+            //bugReport      : 'https://github.com/EmranAhmed/ultimate-page-builder/issues',
             lastTranslator : 'Emran Ahmed <emran.bd.08@gmail.com>',
             team           : 'ThemeHippo <themehippo@gmail.com>',
-            src            : '*.php'
+            src            : '*.php',
+            //domain         : 'ultimate-page-builder',
+            //destFile       : `languages/ultimate-page-builder.pot`
         }, options);
 
         wpPot(options);
@@ -20,43 +24,39 @@ class Api {
         return this;
     }
 
-    banner(banner) {
-
-        let options = Object.assign({}, {
-            banner    : banner,
-            raw       : false,
-            entryOnly : true
-        });
-
-        Config.banner = options;
+    setAssetPath(path) {
+        Config.assetPublicPath = path;
 
         return this;
     }
 
-    notification(options) {
+    notification(options = {}) {
+        options = Object.assign({
+            title        : 'WP Mix',
+            alwaysNotify : Mix.isUsing('notificationsOnSuccess'),
+            contentImage : Mix.paths.root('node_modules/wp-mix/icons/wp.png')
+        }, options);
 
-        let options = Object.assign({}, Config.notificationsOptions, options);
+        Config.notificationConfig = options;
+        return this;
+    }
 
-        Config.notificationsOptions = options;
+    setCommonChunkFileName(name) {
+        Config.commonChunkFileName = name;
 
         return this;
-    };
+    }
 
     postCssBrowsers(browsers) {
         Config.postCssBrowsers = browsers;
         return this;
     }
 
-    wordpress() {
-        Config.wordpress = true;
+    banner(options) {
+        options             = Object.assign({}, Config.bannerConfig, options);
+        Config.bannerConfig = options;
         return this;
     }
-
-    setResourcePath(path) {
-        Config.resourcePath = path;
-
-        return this;
-    };
 
     /**
      * Register the Webpack entry/output paths.
@@ -218,10 +218,18 @@ class Api {
      * @param {string}       output
      * @param {Boolean}      babel
      */
+
     combine(src, output, babel = false) {
         output = new File(output || '');
 
         Verify.combine(src, output);
+
+        if (typeof src === 'string' && File.find(src).isDirectory()) {
+            src = _.pull(
+                glob.sync(path.join(src, '**/*'), {nodir : true}),
+                output.relativePath()
+            );
+        }
 
         let task = new ConcatFilesTask({src, output, babel});
 
@@ -337,14 +345,13 @@ class Api {
 
         files = flatten([].concat(files).map(filePath => {
             if (File.find(filePath).isDirectory()) {
-                filePath += (path.sep + '**/*');
+                filePath += (path.sep + '*');
             }
 
             if (!filePath.includes('*')) return filePath;
 
             return glob.sync(
-                new File(filePath).forceFromPublic().relativePath(),
-                {nodir : true}
+                new File(filePath).forceFromPublic().relativePath()
             );
         }));
 
@@ -407,7 +414,6 @@ class Api {
         return this;
     };
 
-
     /**
      * Disable all OS notifications.
      */
@@ -421,11 +427,7 @@ class Api {
      * Disable success notifications.
      */
     disableSuccessNotifications() {
-        Config.notifications = {
-            onSuccess : false,
-            onFailure : true
-        };
-
+        Config.notificationsOnSuccess = false;
         return this;
     };
 

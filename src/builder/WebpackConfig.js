@@ -26,10 +26,32 @@ class WebpackConfig {
             .buildPlugins()
             .buildResolving()
             .buildResolveLoader()
-            .buildExternals()
             .mergeCustomConfig();
 
         return this.webpackConfig;
+    }
+
+    buildResolveLoader() {
+
+        this.webpackConfig.resolveLoader = {
+            modules : [
+                path.resolve(__dirname, "../../.."),
+                path.resolve(__dirname, "../loaders")
+            ]
+        };
+
+        return this;
+    }
+
+    buildExternals() {
+
+        this.webpackConfig.externals = {
+            jquery     : 'jQuery', // var $ = require("jquery");
+            wp         : 'wp',
+            underscore : '_' // var _ = require("underscore");
+        };
+
+        return this;
     }
 
     /**
@@ -44,6 +66,7 @@ class WebpackConfig {
         // need to add the CommonChunksPlugin to strip out
         // all relevant code into its own file.
         if (extractions.length) {
+
             this.webpackConfig.plugins.push(
                 new webpack.optimize.CommonsChunkPlugin({
                     names     : extractions,
@@ -106,34 +129,10 @@ class WebpackConfig {
 
         this.webpackConfig.resolve = {
             extensions,
-
             alias : {
                 'vue$' : 'vue/dist/vue.common.js'
             }
         };
-
-        return this;
-    }
-
-    buildResolveLoader() {
-        this.webpackConfig.resolveLoader = {
-            modules : [
-                path.resolve(__dirname, "src/loaders"),
-                path.resolve(__dirname, "node_modules")
-            ]
-        };
-        return this;
-    }
-
-    buildExternals() {
-
-        if (Mix.sees('wordpress')) {
-            this.webpackConfig.externals = {
-                jquery     : 'jQuery', // var $ = require("jquery");
-                wp         : 'wp',
-                underscore : '_' // var _ = require("underscore");
-            };
-        }
 
         return this;
     }

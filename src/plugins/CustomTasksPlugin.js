@@ -17,7 +17,7 @@ class CustomTasksPlugin {
             }
 
             if (Mix.isWatching()) {
-                Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
+                Mix.tasks.forEach(task => task.watch());
             }
 
             Mix.manifest.refresh();

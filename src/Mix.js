@@ -1,5 +1,5 @@
-let Paths      = require('./Paths');
-let Manifest   = require('./Manifest');
+let Paths = require('./Paths');
+let Manifest = require('./Manifest');
 let Dispatcher = require('./Dispatcher');
 let isFunction = require('lodash').isFunction;
 
@@ -8,11 +8,12 @@ class Mix {
      * Create a new instance.
      */
     constructor() {
-        this.paths      = new Paths;
-        this.manifest   = new Manifest;
+        this.paths = new Paths;
+        this.manifest = new Manifest;
         this.dispatcher = new Dispatcher;
-        this.tasks      = [];
+        this.tasks = [];
     }
+
 
     /**
      * Determine if the given config item is truthy.
@@ -20,8 +21,9 @@ class Mix {
      * @param {string} tool
      */
     isUsing(tool) {
-        return !!Config[tool];
+        return !! Config[tool];
     }
+
 
     /**
      * Determine if Mix is executing in a production environment.
@@ -30,6 +32,7 @@ class Mix {
         return Config.production;
     }
 
+
     /**
      * Determine if Mix should watch files for changes.
      */
@@ -37,12 +40,6 @@ class Mix {
         return process.argv.includes('--watch') || process.argv.includes('--hot');
     }
 
-    /**
-     * Determine if polling is used for file watching
-     */
-    isPolling() {
-        return this.isWatching() && process.argv.includes('--watch-poll');
-    }
 
     /**
      * Determine if Mix sees a particular tool or framework.
@@ -54,12 +51,9 @@ class Mix {
             return File.exists('./artisan');
         }
 
-        if (tool === 'wordpress') {
-            return Config.wordpress;
-        }
-
         return false;
     }
+
 
     /**
      * Determine if Mix should activate hot reloading.
@@ -70,6 +64,7 @@ class Mix {
         return this.isUsing('hmr');
     }
 
+
     /**
      * Add a custom file to the webpack assets collection.
      *
@@ -78,6 +73,7 @@ class Mix {
     addAsset(asset) {
         Config.customAssets.push(asset);
     }
+
 
     /**
      * Queue up a new task.
@@ -88,6 +84,7 @@ class Mix {
         this.tasks.push(task);
     }
 
+
     /**
      * Listen for the given event.
      *
@@ -97,6 +94,7 @@ class Mix {
     listen(event, callback) {
         this.dispatcher.listen(event, callback);
     }
+
 
     /**
      * Dispatch the given event.

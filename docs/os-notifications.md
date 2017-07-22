@@ -8,4 +8,13 @@ mix.js(src, output)
    .disableNotifications();
 ```
 
+```js
+mix.js(src, output)
+   .notification({
+     title : 'WP Mix',
+     alwaysNotify : Mix.isUsing('notificationsOnSuccess'),
+     contentImage : Mix.paths.root('node_modules/wp-mix/icons/wp.png')
+   });
+```
+
 Simple!

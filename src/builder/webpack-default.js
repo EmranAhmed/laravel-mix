@@ -35,7 +35,6 @@ module.exports = function () {
             headers: {
                 "Access-Control-Allow-Origin": "*"
             },
-            contentBase: path.resolve(Config.publicPath),
             historyApiFallback: true,
             noInfo: true,
             compress: true,

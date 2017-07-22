@@ -1,26 +1,103 @@
-let mix = require('laravel-mix');
+const mix      = require('laravel-mix');
+const fsExtra  = require("fs-extra");
+const path     = require("path");
+const cliColor = require("cli-color");
+const emojic   = require("emojic");
+const min      = Mix.inProduction() ? '.min' : '';
 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for your application, as well as bundling up your JS files.
- |
- */
+if (process.env.NODE_ENV == 'package') {
+    mix.then(function () {
+        let bundledir = path.basename(path.resolve(__dirname));
+        let copyfrom  = path.resolve(__dirname);
+        let copyto    = path.resolve(bundledir);
+        let includes  = ['assets',
+                         'elements',
+                         'fonts',
+                         'images',
+                         'includes',
+                         'languages',
+                         'templates',
+                         'LICENSE.txt',
+                         'README.txt',
+                         `${bundledir}.php`];
+        fsExtra.ensureDir(copyto, function (err) {
+            if (err) return console.error(err)
 
-mix.js('src/app.js', 'dist/')
-   .sass('src/app.scss', 'dist/');
+            includes.map(include => {
+
+                fsExtra.copy(`${copyfrom}/${include}`, `${copyto}/${include}`, function (err) {
+                    if (err) return console.error(err)
+
+                    console.log(cliColor.white(`=> ${emojic.smiley}  ${include} copied...`));
+
+                    /*if (include == 'assets') {
+                     // Just Removed SCSS Dir
+                     fsExtra.removeSync(`${copyto}/${include}/scss`);
+                     }*/
+                })
+            });
+
+            console.log(cliColor.white(`=> ${emojic.whiteCheckMark}  Build directory created`));
+        })
+    });
+}
+else {
+
+    mix.banner({
+        banner : "Ultimate Page Builder v1.0.0-beta.28 \n\nAuthor: Emran Ahmed ( https://themehippo.com/ ) \nDate: " + new Date().toLocaleString() + "\nReleased under the MIT license."
+    });
+
+    mix.notification({
+        title        : 'Ultimate Page Builder',
+        contentImage : Mix.paths.root('images/logo.png')
+    });
+
+    if (Mix.inProduction()) {
+        mix.generatePot({
+            package   : 'ultimate-page-builder',
+            bugReport : 'https://github.com/EmranAhmed/ultimate-page-builder/issues',
+            src       : '*.php',
+            domain    : 'ultimate-page-builder',
+            destFile  : `languages/ultimate-page-builder.pot`
+        });
+    }
+
+    mix.options({
+        extractVueStyles : `assets/css/upb-style${min}.css`,
+    });
+
+    mix.setCommonChunkFileName('upb-common');
+
+    mix.autoload({
+        vue : ['window.Vue', 'Vue']
+    });
+
+    mix.sourceMaps();
+
+    mix.js('src/builder.js', `assets/js/upb-builder${min}.js`);
+
+    // mix.js('src/js/upb-media.js', `assets/js/upb-media${min}.js`);
+
+    ['select2', 'upb-boilerplate', 'upb-scoped-polyfill', 'wp-color-picker-alpha'].map((name) => mix.babel(`src/js/${name}.js`, `assets/js/${name}${min}.js`));
+
+    // Vendor, Check CommonsChunkPlugin on webpack.config.js
+    mix.extract(['vue', 'vue-router', 'extend', 'sprintf-js', 'sanitize-html', 'copy-to-clipboard'], `assets/js/upb-vendor${min}.js`);
+
+    ['select2', 'upb-boilerplate', 'upb-grid', 'upb-preview', 'upb-skeleton'].map((name) => mix.sass(`src/scss/${name}.scss`, `assets/css/${name}${min}.css`));
+
+}
 
 // Full API
+// mix.generatePot({})
+// mix.banner({})
+// mix.notification({})
+// mix.postCssBrowsers({})
+// mix.setCommonChunkFileName('upb-common');
 // mix.js(src, output);
 // mix.react(src, output); <-- Identical to mix.js(), but registers React Babel compilation.
 // mix.extract(vendorLibs);
 // mix.sass(src, output);
 // mix.standaloneSass('src', output); <-- Faster, but isolated from Webpack.
-// mix.fastSass('src', output); <-- Alias for mix.standaloneSass().
 // mix.less(src, output);
 // mix.stylus(src, output);
 // mix.browserSync('my-site.dev');
