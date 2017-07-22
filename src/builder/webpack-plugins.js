@@ -7,7 +7,7 @@ let CustomTasksPlugin           = require('../plugins/CustomTasksPlugin');
 let ManifestPlugin              = require('../plugins/ManifestPlugin');
 let WebpackChunkHashPlugin      = require('webpack-chunk-hash');
 let UglifyJSPlugin              = require('uglifyjs-webpack-plugin');
-//let SmartBannerPlugin           = require('smart-banner-webpack-plugin');
+let SmartBannerPlugin           = require('smart-banner-webpack-plugin');
 
 module.exports = function () {
     let plugins = [];
@@ -22,15 +22,15 @@ module.exports = function () {
         new webpack.ProvidePlugin(Config.autoload)
     );
 
-    /*plugins.push(
-     new SmartBannerPlugin(Config.bannerConfig)
-     );*/
+    plugins.push(
+        new SmartBannerPlugin(Config.bannerConfig)
+    );
 
     // Add support for webpack 3 scope hoisting.
     // Current disabled due to: https://github.com/webpack/webpack/issues/5132
-    /*plugins.push(
-     new webpack.optimize.ModuleConcatenationPlugin()
-     );*/
+    plugins.push(
+        new webpack.optimize.ModuleConcatenationPlugin()
+    );
 
     // Activate support for Mix_ .env definitions.
     plugins.push(
