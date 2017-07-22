@@ -1,4 +1,4 @@
-const mix      = require('laravel-mix');
+const mix      = require('wp-mix');
 const fsExtra  = require("fs-extra");
 const path     = require("path");
 const cliColor = require("cli-color");

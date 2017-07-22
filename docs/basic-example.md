@@ -5,7 +5,7 @@ Laravel Mix is a clean layer on top of webpack to make the 80% use case laughabl
 Have a look at a basic `webpack.mix.js` file. Let's imagine that we only desire JavaScript \(ES2015 with modules\), and Sass compilation:
 
 ```js
-const mix      = require('laravel-mix');
+const mix      = require('wp-mix');
 
 const min      = Mix.inProduction() ? '.min' : '';
 
