@@ -4,11 +4,13 @@ let ConcatFilesTask  = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
 let glob             = require('glob');
 let _                = require('lodash');
-let wpPot            = require('wp-pot');
 
 class Api {
 
     generatePot(options) {
+
+        let wpPot = require('wp-pot');
+
         options = Object.assign({
             //package        : 'ultimate-page-builder',
             //bugReport      : 'https://github.com/EmranAhmed/ultimate-page-builder/issues',
