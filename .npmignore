@@ -7,3 +7,4 @@ coverage
 mix.sublime-project
 mix.sublime-workspace
 notes.md
+.DS_*

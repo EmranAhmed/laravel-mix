@@ -16,7 +16,7 @@
     "url": "git+https://github.com/EmranAhmed/wp-mix.git"
   },
   "bugs": {
-    "url": "https://github.com/JeffreyWay/laravel-mix/issues"
+    "url": "https://github.com/EmranAhmed/wp-mix/issues"
   },
   "homepage": "https://github.com/EmranAhmed/wp-mix#readme",
   "keywords": [
@@ -27,7 +27,7 @@
     "laravel mix",
     "wp mix"
   ],
-  "author": "Jeffrey Way",
+  "author": "Emran Ahmed",
   "license": "MIT",
   "dependencies": {
     "autoprefixer": "^7.1.2",
