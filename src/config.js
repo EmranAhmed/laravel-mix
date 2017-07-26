@@ -24,6 +24,8 @@ module.exports = function () {
             'bb >= 10'
         ],
 
+        bannerPlugin : false,
+
         bannerConfig : {
             banner    : "",
             raw       : false,

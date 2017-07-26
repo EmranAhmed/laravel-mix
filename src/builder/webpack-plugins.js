@@ -22,15 +22,19 @@ module.exports = function () {
         new webpack.ProvidePlugin(Config.autoload)
     );
 
-    plugins.push(
-        new SmartBannerPlugin(Config.bannerConfig)
-    );
+    // Activate Banner Plugin
+    if (Config.bannerPlugin) {
+        plugins.push(
+            new SmartBannerPlugin(Config.bannerConfig)
+        );
+    }
 
     // Add support for webpack 3 scope hoisting.
-    // Current disabled due to: https://github.com/webpack/webpack/issues/5132
-    plugins.push(
-        new webpack.optimize.ModuleConcatenationPlugin()
-    );
+    if (Mix.inProduction()) {
+        plugins.push(
+            new webpack.optimize.ModuleConcatenationPlugin()
+        );
+    }
 
     // Activate support for Mix_ .env definitions.
     plugins.push(
@@ -121,11 +125,6 @@ module.exports = function () {
         );
     }
 
-    // Notify the rest of our app when Webpack has finished its build.
-    plugins.push(
-        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
-    );
-
     // Handle all custom, non-webpack tasks.
     plugins.push(
         new ManifestPlugin()
@@ -134,6 +133,11 @@ module.exports = function () {
     // Handle all custom, non-webpack tasks.
     plugins.push(
         new CustomTasksPlugin()
+    );
+
+    // Notify the rest of our app when Webpack has finished its build.
+    plugins.push(
+        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
     );
 
     return plugins;

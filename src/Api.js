@@ -57,6 +57,7 @@ class Api {
     banner(options) {
         options             = Object.assign({}, Config.bannerConfig, options);
         Config.bannerConfig = options;
+        Config.bannerPlugin = true;
         return this;
     }
 
@@ -347,18 +348,19 @@ class Api {
 
         files = flatten([].concat(files).map(filePath => {
             if (File.find(filePath).isDirectory()) {
-                filePath += (path.sep + '*');
+                filePath += (path.sep + '**/*');
             }
 
-            if (!filePath.includes('*')) return filePath;
+            if (! filePath.includes('*')) return filePath;
 
             return glob.sync(
-                new File(filePath).forceFromPublic().relativePath()
+                new File(filePath).forceFromPublic().relativePath(),
+                { nodir: true }
             );
         }));
 
         Mix.addTask(
-            new VersionFilesTask({files})
+            new VersionFilesTask({ files })
         );
 
         return this;
