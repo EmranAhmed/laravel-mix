@@ -36,7 +36,7 @@ module.exports = function () {
         loaders : ['style-loader', 'css-loader']
     });
 
-    // Recognize .scss Imports.
+    // Recognize .sass resources.
     let sassLoaders = Config.sassResources.length < 1 ? ['style-loader', 'css-loader', 'sass-loader'] : ['style-loader', 'css-loader', 'sass-loader', {
         loader  : 'sass-resources-loader',
         options : {
