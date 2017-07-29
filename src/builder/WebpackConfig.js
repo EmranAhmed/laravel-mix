@@ -130,7 +130,8 @@ class WebpackConfig {
         this.webpackConfig.resolve = {
             extensions,
             alias : {
-                'vue$' : 'vue/dist/vue.common.js'
+                'vue$' : 'vue/dist/vue.common.js',
+                '@'    : Mix.paths.root('src')
             }
         };
 

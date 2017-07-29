@@ -61,6 +61,20 @@ class Api {
         return this;
     }
 
+    modernizr(options) {
+        // see https://www.npmjs.com/package/modernizr-webpack-plugin for more config.
+        Config.modernizrConfig = options;
+        Config.modernizr       = true;
+        return this;
+    }
+
+    // Sass Resource Loader
+    sassAutoload(files = []) {
+        files                = Object.assign([], Config.sassResources);
+        Config.sassResources = files;
+        return this;
+    }
+
     /**
      * Register the Webpack entry/output paths.
      *
@@ -351,16 +365,16 @@ class Api {
                 filePath += (path.sep + '**/*');
             }
 
-            if (! filePath.includes('*')) return filePath;
+            if (!filePath.includes('*')) return filePath;
 
             return glob.sync(
                 new File(filePath).forceFromPublic().relativePath(),
-                { nodir: true }
+                {nodir : true}
             );
         }));
 
         Mix.addTask(
-            new VersionFilesTask({ files })
+            new VersionFilesTask({files})
         );
 
         return this;

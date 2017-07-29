@@ -10,27 +10,21 @@ module.exports = function () {
 
         notificationConfig : {},
 
-        postCssBrowsers : [
-            'last 3 versions',
-            '> 1%',
-            'ie >= 9',
-            'ie_mob >= 10',
-            'ff >= 30',
-            'chrome >= 34',
-            'safari >= 7',
-            'opera >= 23',
-            'ios >= 7',
-            'android >= 4',
-            'bb >= 10'
-        ],
+        postCssBrowsers : ['last 3 versions', '> 1%'],
 
         bannerPlugin : false,
 
         bannerConfig : {
-            banner    : "",
+            banner    : "name:[name], file:[file]",
             raw       : false,
             entryOnly : true
         },
+
+        modernizr : false,
+
+        modernizrConfig : {},
+
+        sassResources : [],
 
         /**
          * Determine if webpack should be triggered in a production environment.

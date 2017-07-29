@@ -7,10 +7,23 @@ let CustomTasksPlugin           = require('../plugins/CustomTasksPlugin');
 let ManifestPlugin              = require('../plugins/ManifestPlugin');
 let WebpackChunkHashPlugin      = require('webpack-chunk-hash');
 let UglifyJSPlugin              = require('uglifyjs-webpack-plugin');
-let SmartBannerPlugin           = require('smart-banner-webpack-plugin');
+//let SmartBannerPlugin           = require('smart-banner-webpack-plugin');
+let ModernizrWebpackPlugin      = require('modernizr-webpack-plugin');
 
 module.exports = function () {
     let plugins = [];
+
+    if (Config.modernizr) {
+        // Custom Build Modernizr
+        plugins.push(
+            new ModernizrWebpackPlugin(Config.modernizrConfig)
+        );
+    }
+
+    // Activate better error feedback in the console.
+    plugins.push(
+        new FriendlyErrorsWebpackPlugin({clearConsole : Config.clearConsole})
+    );
 
     // Activate better error feedback in the console.
     plugins.push(
@@ -19,13 +32,23 @@ module.exports = function () {
 
     // Activate Webpack autoloading support.
     plugins.push(
-        new webpack.ProvidePlugin(Config.autoload)
+        new webpack.ProvidePlugin(Object.assign({}, {
+            jQuery          : 'jquery',
+            $               : 'jquery',
+            jquery          : 'jquery',
+            'window.jQuery' : 'jquery',
+            'window.$'      : 'jquery',
+            'window.wp'     : 'wp',
+            'window._'      : 'underscore',
+            _               : 'underscore'
+        }, Config.autoload))
     );
 
     // Activate Banner Plugin
     if (Config.bannerPlugin) {
         plugins.push(
-            new SmartBannerPlugin(Config.bannerConfig)
+            new webpack.BannerPlugin(Config.bannerConfig)
+            //new SmartBannerPlugin(Config.bannerConfig)
         );
     }
 

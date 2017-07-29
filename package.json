@@ -1,6 +1,6 @@
 {
   "name": "wp-mix",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "WP Mix is a fork of Laravel Mix which is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
@@ -51,11 +51,12 @@
     "img-loader": "^2.0.0",
     "lodash": "^4.17.4",
     "md5": "^2.2.1",
+    "modernizr-webpack-plugin": "^1.0.6",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.5",
     "resolve-url-loader": "^2.0.2",
     "sass-loader": "^6.0.5",
-    "smart-banner-webpack-plugin": "^3.0.1",
+    "sass-resources-loader": "^1.3.0",
     "style-loader": "^0.18.1",
     "uglify-js": "^2.8.28",
     "uglifyjs-webpack-plugin": "^0.4.6",

@@ -8,7 +8,7 @@ module.exports = function () {
     // Babel Compilation.
     rules.push({
         test    : /\.jsx?$/,
-        exclude : /(node_modules|bower_components|assets)/,
+        exclude : /(bower_components|assets)/,
         use     : [
             {
                 loader  : 'babel-loader',
@@ -37,15 +37,24 @@ module.exports = function () {
     });
 
     // Recognize .scss Imports.
+    let sassLoaders = Config.sassResources.length < 1 ? ['style-loader', 'css-loader', 'sass-loader'] : ['style-loader', 'css-loader', 'sass-loader', {
+        loader  : 'sass-resources-loader',
+        options : {
+            resources : Config.sassResources,
+        }
+    }];
     rules.push({
         test    : /\.s[ac]ss$/,
+        include : /node_modules/,
         exclude : Config.preprocessors.sass ? Config.preprocessors.sass.map(sass => sass.src.path()) : [],
-        loaders : ['style-loader', 'css-loader', 'sass-loader']
+        //loaders : ['style-loader', 'css-loader', 'sass-loader']
+        loaders : sassLoaders
     });
 
     // Recognize .less Imports.
     rules.push({
         test    : /\.less$/,
+        include : /node_modules/,
         exclude : Config.preprocessors.less ? Config.preprocessors.less.map(less => less.src.path()) : [],
         loaders : ['style-loader', 'css-loader', 'less-loader']
     });
@@ -70,10 +79,10 @@ module.exports = function () {
                         }
 
                         return 'images/' + path
-                                .replace(/\\/g, '/')
-                                .replace(
-                                    /((.*(node_modules|bower_components))|images|image|img|assets|src)\//g, ''
-                                ) + '?[hash]';
+                            .replace(/\\/g, '/')
+                            .replace(
+                                /((.*(node_modules|bower_components))|images|image|img|assets|src)\//g, ''
+                            ) + '?[hash]';
                     },
                     //publicPath: Config.resourceRoot
                     publicPath : Config.assetPublicPath
@@ -123,10 +132,10 @@ module.exports = function () {
                 }
 
                 return 'fonts/' + path
-                        .replace(/\\/g, '/')
-                        .replace(
-                            /((.*(node_modules|bower_components))|fonts|font|assets|src)\//g, ''
-                        ) + '?[hash]';
+                    .replace(/\\/g, '/')
+                    .replace(
+                        /((.*(node_modules|bower_components))|fonts|font|assets|src)\//g, ''
+                    ) + '?[hash]';
             },
             //publicPath: Config.resourceRoot,
             publicPath : Config.assetPublicPath
@@ -187,15 +196,15 @@ module.exports = function () {
                         }
                     });
                 }
-
-                loaders.push({
-                    loader  : `${type}-loader`,
-                    options : Object.assign(
-                        preprocessor.pluginOptions,
-                        {sourceMap : (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps')}
-                    )
-                });
-
+                if (type !== 'postCss') {
+                    loaders.push({
+                        loader  : `${type}-loader`,
+                        options : Object.assign(
+                            preprocessor.pluginOptions,
+                            {sourceMap : (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps')}
+                        )
+                    });
+                }
                 rules.push({
                     test : preprocessor.src.path(),
                     use  : extractPlugin.extract({fallback : 'style-loader', use : loaders})
@@ -213,6 +222,21 @@ module.exports = function () {
         vueExtractPlugin = typeof(Config.extractVueStyles) === "boolean" ? new ExtractTextPlugin('vue-styles.css') : new ExtractTextPlugin(Config.extractVueStyles);
     }
 
+    // Recognize .scss Imports.
+    let vueScssLoaders = Config.sassResources.length < 1 ? ['css-loader', 'sass-loader'] : ['css-loader', 'sass-loader', {
+        loader  : 'sass-resources-loader',
+        options : {
+            resources : Config.sassResources,
+        }
+    }];
+
+    let vueSassLoaders = Config.sassResources.length < 1 ? ['css-loader', 'sass-loader?indentedSyntax'] : ['css-loader', 'sass-loader?indentedSyntax', {
+        loader  : 'sass-resources-loader',
+        options : {
+            resources : Config.sassResources,
+        }
+    }];
+
     rules.push({
         test    : /\.vue$/,
         loader  : 'vue-loader',
@@ -226,12 +250,12 @@ module.exports = function () {
                 },
 
                 scss : vueExtractPlugin.extract({
-                    use      : 'css-loader!sass-loader',
+                    use      : vueScssLoaders,
                     fallback : 'vue-style-loader'
                 }),
 
                 sass : vueExtractPlugin.extract({
-                    use      : 'css-loader!sass-loader?indentedSyntax',
+                    use      : vueSassLoaders,
                     fallback : 'vue-style-loader'
                 }),
 
