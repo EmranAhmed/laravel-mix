@@ -7,7 +7,6 @@ let CustomTasksPlugin           = require('../plugins/CustomTasksPlugin');
 let ManifestPlugin              = require('../plugins/ManifestPlugin');
 let WebpackChunkHashPlugin      = require('webpack-chunk-hash');
 let UglifyJSPlugin              = require('uglifyjs-webpack-plugin');
-//let SmartBannerPlugin           = require('smart-banner-webpack-plugin');
 let ModernizrWebpackPlugin      = require('modernizr-webpack-plugin');
 
 module.exports = function () {
@@ -32,23 +31,13 @@ module.exports = function () {
 
     // Activate Webpack autoloading support.
     plugins.push(
-        new webpack.ProvidePlugin(Object.assign({}, {
-            jQuery          : 'jquery',
-            $               : 'jquery',
-            jquery          : 'jquery',
-            'window.jQuery' : 'jquery',
-            'window.$'      : 'jquery',
-            'window.wp'     : 'wp',
-            'window._'      : 'underscore',
-            _               : 'underscore'
-        }, Config.autoload))
+        new webpack.ProvidePlugin(Config.autoload)
     );
 
     // Activate Banner Plugin
     if (Config.bannerPlugin) {
         plugins.push(
             new webpack.BannerPlugin(Config.bannerConfig)
-            //new SmartBannerPlugin(Config.bannerConfig)
         );
     }
 

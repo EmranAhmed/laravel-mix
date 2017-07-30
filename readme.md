@@ -56,14 +56,6 @@ if (Mix.inProduction()) {
     });
 }
 
-// for bootstrap support 
-mix.webpackConfig({
-    externals : {
-        Tether          : 'tether',
-        'window.Tether' : 'tether'
-    }
-});
-
 // Autoload
 mix.autoload({
     tether : ['tether', 'window.Tether', 'Tether'],
@@ -76,11 +68,11 @@ mix.js('src/js/script.js', 'assets/js');
 
 mix.babel('src/js/babel-code.js', 'assets/js');
 
+mix.sassAutoload(['src/sass/variables.scss', 'src/sass/mixins.scss']);
+
 mix.sass('src/sass/style.scss', 'assets/css');
 
 mix.setCommonChunkFileName('commons'); // manifest file
-
-mix.sassAutoload(['src/sass/variables.scss', 'src/sass/mixins.scss']);
 
 mix.extract(['vue', 'vue-router', 'extend'], `assets/js/vendor${min}.js`);
 ```
