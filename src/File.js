@@ -23,7 +23,7 @@ class File {
         let data = '';
 
         contents.forEach(content => {
-            if (this.find(content).isFile()) {
+            if (File.find(content).isFile()) {
                 data += new File(content).read();
             }
             else {
