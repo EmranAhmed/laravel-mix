@@ -28,6 +28,8 @@ class WebpackConfig {
             .buildResolveLoader()
             .mergeCustomConfig();
 
+        Mix.dispatch('configReady', this.webpackConfig);
+
         return this.webpackConfig;
     }
 

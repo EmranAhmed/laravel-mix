@@ -32,7 +32,7 @@ module.exports = function () {
     // CSS Compilation.
     rules.push({
         test    : /\.css$/,
-        exclude : /assets/,
+        exclude : Config.preprocessors.postCss ? Config.preprocessors.postCss.map(postCss => postCss.src.path()) : [],
         loaders : ['style-loader', 'css-loader']
     });
 
@@ -182,7 +182,15 @@ module.exports = function () {
                              require('autoprefixer')
                              ].concat(Config.postCss)*/
 
-                            plugins : Config.postCss
+                            // plugins : Config.postCss,
+
+                            plugins : [
+                                require('autoprefixer')
+                            ].concat(
+                                preprocessor.postCssPlugins && preprocessor.postCssPlugins.length
+                                    ? preprocessor.postCssPlugins
+                                    : Config.postCss
+                            )
                         }
                     },
                 ];

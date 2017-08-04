@@ -75,6 +75,20 @@ class Api {
         return this;
     }
 
+    postCss(src, output, postCssPlugins = []) {
+        Verify.preprocessor('postCss', src, output);
+
+        src = new File(src);
+
+        output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
+
+        Config.preprocessors['postCss'] = (Config.preprocessors['postCss'] || [require('autoprefixer')({browsers : Config.postCssBrowsers})]).concat({
+            src, output, postCssPlugins
+        });
+
+        return this;
+    };
+
     /**
      * Register the Webpack entry/output paths.
      *
