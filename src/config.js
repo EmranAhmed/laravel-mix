@@ -190,6 +190,7 @@ module.exports = function () {
          * @type {Object}
          */
         babel : function () {
+            
             let options = {};
 
             tap(Mix.paths.root('.babelrc'), babelrc => {
