@@ -207,9 +207,10 @@ module.exports = function () {
                             'browsers' : ['> 2%'],
                             uglify     : true
                         }
-                    }]
+                    }],
+                    ["es2015", {"modules" : false}]
                 ],
-                plugins        : ["dynamic-import-node", "transform-es2015-modules-strip", "transform-object-rest-spread"]
+                plugins        : ["dynamic-import-node", "transform-object-rest-spread"]
             };
 
             if (this.react) {
