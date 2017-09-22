@@ -8,9 +8,17 @@ let ManifestPlugin              = require('../plugins/ManifestPlugin');
 let WebpackChunkHashPlugin      = require('webpack-chunk-hash');
 let UglifyJSPlugin              = require('uglifyjs-webpack-plugin');
 let ModernizrWebpackPlugin      = require('modernizr-webpack-plugin');
+let CompressionPlugin           = require("compression-webpack-plugin");
 
 module.exports = function () {
     let plugins = [];
+
+    // gz Compression
+    if (Mix.inProduction() && Config.gzCompression) {
+        plugins.push(
+            new CompressionPlugin(Config.gzCompressionConfig)
+        );
+    }
 
     if (Config.modernizr) {
         // Custom Build Modernizr

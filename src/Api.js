@@ -61,6 +61,21 @@ class Api {
         return this;
     }
 
+    gzCompression(options = {}) {
+        // see https://github.com/webpack-contrib/compression-webpack-plugin
+        // see https://browse-tutorials.com/tutorial/serve-static-gzip-webpack-and-nginx
+        options                    = Object.assign({}, {
+            asset     : "[path].gz[query]",
+            algorithm : "gzip",
+            test      : /\.(js|css|ttf|svg|eot)$/,
+            threshold : 10240,
+            minRatio  : 0.8
+        }, options);
+        Config.gzCompressionConfig = options;
+        Config.gzCompression       = true;
+        return this;
+    }
+
     modernizr(options) {
         // see https://www.npmjs.com/package/modernizr-webpack-plugin for more config.
         Config.modernizrConfig = options;
@@ -467,16 +482,35 @@ class Api {
      * Register libraries to automatically "autoload" when
      * the appropriate variable is references in your JS.
      *
+     * when you pass exact, it will add same as webpack.ProvidePlugin style like:
+     *
+     * new webpack.ProvidePlugin({
+     *   $: 'jquery',
+     *   jQuery: 'jquery',
+     *   'window.jQuery': 'jquery',
+     *   Popper: ['popper.js', 'default'],
+     *   // In case you imported plugins individually, you must also require them here:
+     *   Util: "exports-loader?Util!bootstrap/js/dist/util",
+     *   Dropdown: "exports-loader?Dropdown!bootstrap/js/dist/dropdown",
+     *   ...
+     * })
+     *
      * @param {Object} libs
+     * @param {Boolean} exact
      */
-    autoload(libs) {
+    autoload(libs, exact = false) {
         let aliases = {};
 
-        Object.keys(libs).forEach(library => {
-            [].concat(libs[library]).forEach(alias => {
-                aliases[alias] = library;
+        if (exact) {
+            aliases = Object.assign({}, libs);
+        }
+        else {
+            Object.keys(libs).forEach(library => {
+                [].concat(libs[library]).forEach(alias => {
+                    aliases[alias] = library;
+                });
             });
-        });
+        }
 
         Config.autoload = aliases;
 

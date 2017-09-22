@@ -22,6 +22,8 @@ module.exports = function () {
 
         modernizr : false,
 
+        gzCompression : false,
+
         modernizrConfig : {},
 
         sassResources : [],
@@ -207,7 +209,7 @@ module.exports = function () {
                         }
                     }]
                 ],
-                plugins        : ["dynamic-import-node"]
+                plugins        : ["dynamic-import-node", "transform-es2015-modules-strip", "transform-object-rest-spread"]
             };
 
             if (this.react) {
