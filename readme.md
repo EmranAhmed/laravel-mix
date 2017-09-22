@@ -45,14 +45,15 @@ mix.notification({
 });
 
 // POT File generate
+// See Example: https://github.com/EmranAhmed/ultimate-page-builder
 
 if (Mix.inProduction()) {
     mix.generatePot({
-        package   : 'FashionStore',
-        bugReport : 'https://themehippo.com/contact/',
+        package   : 'ultimate-page-builder',
+        bugReport : 'https://github.com/EmranAhmed/ultimate-page-builder/issues',
         src       : '*.php',
-        domain    : 'fashionstore',
-        destFile  : `languages/fashionstore.pot`
+        domain    : 'ultimate-page-builder',
+        destFile  : `languages/ultimate-page-builder.pot`
     });
 }
 
@@ -62,17 +63,31 @@ mix.autoload({
     vue : ['window.Vue', 'Vue']
 });
 
+// OR ProvidePlugin Style Autoload, 
+// See: https://getbootstrap.com/docs/4.0/getting-started/webpack/#importing-javascript
+
+mix.autoload({
+     Popper: ['popper.js', 'default'],
+     Util: "exports-loader?Util!bootstrap/js/dist/util",
+}, true);
+
+// Enable gzCompression, gzCompression on production mode
+mix.gzCompression();
+
+// Enable sourceMap
 mix.sourceMaps();
 
+// Compile JS
 mix.js('src/js/script.js', 'assets/js');
 
 mix.babel('src/js/babel-code.js', 'assets/js');
 
 mix.sassAutoload(['src/sass/variables.scss', 'src/sass/mixins.scss']);
 
+// Compile SCSS
 mix.sass('src/sass/style.scss', 'assets/css');
 
-mix.setCommonChunkFileName('commons'); // manifest file
+mix.setCommonChunkFileName('commons'); // Common Chunk File Name
 
 mix.extract(['vue', 'vue-router', 'extend'], `assets/js/vendor${min}.js`);
 ```
