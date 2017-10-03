@@ -83,11 +83,23 @@ class Api {
         return this;
     }
 
+    imageLoaderOptions(options) {
+        // see https://www.npmjs.com/package/img-loader
+        options                 = Object.assign({}, Config.imgLoaderOptions, options);
+        Config.imgLoaderOptions = options;
+
+        return this;
+    }
+
     // Sass Resource Loader
     sassAutoload(files = []) {
         files                = Object.assign([], Config.sassResources);
         Config.sassResources = files;
         return this;
+    }
+
+    scssAutoload(files = []) {
+        return this.sassAutoload(files);
     }
 
     postCss(src, output, postCssPlugins = []) {
@@ -169,8 +181,9 @@ class Api {
     sass(src, output, pluginOptions = {}) {
         pluginOptions = Object.assign({
             precision   : 8,
-            outputStyle : 'expanded'
-        }, pluginOptions, {sourceMap : true});
+            outputStyle : 'expanded',
+            sourceMap   : Config.sourcemaps
+        }, pluginOptions);
 
         return this.preprocess('sass', src, output, pluginOptions);
     }

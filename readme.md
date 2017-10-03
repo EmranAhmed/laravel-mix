@@ -74,6 +74,19 @@ mix.autoload({
 // Enable gzCompression, gzCompression on production mode
 mix.gzCompression();
 
+
+// Image Loader Options
+mix.imageLoaderOptions({
+    gifsicle : {},
+    mozjpeg  : {
+        progressive: true,
+    },
+    optipng  : {},
+    svgo     : {},
+});
+
+
+
 // Enable sourceMap
 mix.sourceMaps();
 
@@ -82,6 +95,7 @@ mix.js('src/js/script.js', 'assets/js');
 
 mix.babel('src/js/babel-code.js', 'assets/js');
 
+// Sass/Scss Autoload
 mix.sassAutoload(['src/sass/variables.scss', 'src/sass/mixins.scss']);
 
 // Compile SCSS

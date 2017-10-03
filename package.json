@@ -1,6 +1,6 @@
 {
   "name": "wp-mix",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "WP Mix is a fork of Laravel Mix which is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
@@ -23,8 +23,6 @@
     "laravel",
     "wordpress",
     "webpack",
-    "laravel elixir",
-    "laravel mix",
     "wp mix"
   ],
   "author": "Emran Ahmed",

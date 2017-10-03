@@ -75,10 +75,10 @@ module.exports = function () {
                 options : {
                     name       : path => {
                         if (!/node_modules|bower_components/.test(path)) {
-                            return 'images/[name].[ext]?[hash]';
+                            return Config.fileLoaderDirs.images + '/[name].[ext]?[hash]';
                         }
 
-                        return 'images/' + path
+                        return Config.fileLoaderDirs.images + '/' + path
                             .replace(/\\/g, '/')
                             .replace(
                                 /((.*(node_modules|bower_components))|images|image|img|assets|src)\//g, ''
@@ -105,9 +105,8 @@ module.exports = function () {
             {
                 loader  : 'ignore-files-loader',
                 options : {
-
                     name       : path => {
-                        return 'images/[name].[ext]?[hash]';
+                        return Config.fileLoaderDirs.images + '/[name].[ext]?[hash]';
                     },
                     //publicPath: Config.resourceRoot
                     publicPath : Config.assetPublicPath
@@ -128,10 +127,10 @@ module.exports = function () {
         options : {
             name       : path => {
                 if (!/node_modules|bower_components/.test(path)) {
-                    return 'fonts/[name].[ext]?[hash]';
+                    return Config.fileLoaderDirs.fonts + '/[name].[ext]?[hash]';
                 }
 
-                return 'fonts/' + path
+                return Config.fileLoaderDirs.fonts + '/' + path
                     .replace(/\\/g, '/')
                     .replace(
                         /((.*(node_modules|bower_components))|fonts|font|assets|src)\//g, ''
@@ -163,6 +162,12 @@ module.exports = function () {
             let outputPath = preprocessor.output.filePath.replace(Config.publicPath + path.sep, path.sep);
 
             tap(new ExtractTextPlugin(outputPath), extractPlugin => {
+
+                let postCssPlugins = Config.postCss;
+                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
+                    postCssPlugins = preprocessor.postCssPlugins;
+                }
+
                 let loaders = [
                     {
                         loader  : 'css-loader',
@@ -178,19 +183,7 @@ module.exports = function () {
                         options : {
                             sourceMap : (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
                             ident     : 'postcss',
-                            /*plugins   : [
-                             require('autoprefixer')
-                             ].concat(Config.postCss)*/
-
-                            // plugins : Config.postCss,
-
-                            plugins : [
-                                require('autoprefixer')
-                            ].concat(
-                                preprocessor.postCssPlugins && preprocessor.postCssPlugins.length
-                                    ? preprocessor.postCssPlugins
-                                    : Config.postCss
-                            )
+                            plugins   : postCssPlugins
                         }
                     },
                 ];
@@ -290,7 +283,7 @@ module.exports = function () {
             postcss     : Config.postCss,
             preLoaders  : Config.vue.preLoaders,
             postLoaders : Config.vue.postLoaders,
-            esModule    : false
+            esModule    : Config.vue.esModule
         }
     });
 

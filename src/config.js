@@ -167,7 +167,8 @@ module.exports = function () {
          */
         vue : {
             preLoaders  : {},
-            postLoaders : {}
+            postLoaders : {},
+            esModule    : false
         },
 
         /**
@@ -185,12 +186,22 @@ module.exports = function () {
         },
 
         /**
+         * File Loader directory defaults.
+         *
+         * @type {Object}
+         */
+        fileLoaderDirs : {
+            images : 'images',
+            fonts  : 'fonts'
+        },
+
+        /**
          * The default Babel configuration.
          *
          * @type {Object}
          */
         babel : function () {
-            
+
             let options = {};
 
             tap(Mix.paths.root('.babelrc'), babelrc => {
