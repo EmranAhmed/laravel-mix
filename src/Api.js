@@ -182,7 +182,7 @@ class Api {
         pluginOptions = Object.assign({
             precision   : 8,
             outputStyle : 'expanded',
-            sourceMap   : Config.sourcemaps
+            sourceMap   : true
         }, pluginOptions);
 
         return this.preprocess('sass', src, output, pluginOptions);
