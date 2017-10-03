@@ -192,7 +192,7 @@ module.exports = function () {
                     loaders.push({
                         loader  : 'resolve-url-loader',
                         options : {
-                            sourceMap : true,
+                            sourceMap : Mix.isUsing('sourcemaps'),
                             root      : Mix.paths.root('node_modules')
                         }
                     });

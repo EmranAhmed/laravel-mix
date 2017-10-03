@@ -182,7 +182,7 @@ class Api {
         pluginOptions = Object.assign({
             precision   : 8,
             outputStyle : 'expanded',
-            sourceMap   : true
+            sourceMap   : Mix.isUsing('sourcemaps')
         }, pluginOptions);
 
         return this.preprocess('sass', src, output, pluginOptions);
@@ -441,7 +441,7 @@ class Api {
      * @param {Boolean} productionToo
      */
     sourceMaps(productionToo = true) {
-        let type = 'cheap-module-eval-source-map';
+        let type = 'inline-cheap-module-source-map';
 
         if (Mix.inProduction()) {
             type = productionToo ? 'cheap-source-map' : false;

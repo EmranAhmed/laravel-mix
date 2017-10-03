@@ -16,7 +16,7 @@ If you've ever been confused about how to get started with module bundling and a
 {
 "scripts": {
     "webpack"        : "cross-env NODE_ENV=development node_modules/.bin/webpack --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
-    "dev"            : "cross-env NODE_ENV=development node_modules/.bin/webpack --watch --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
+    "dev"            : "npm run webpack -- --watch",
     "build"          : "cross-env NODE_ENV=production node_modules/.bin/webpack --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
     "bundle"         : "npm run webpack && npm run build",
     "package:bundle" : "cross-env NODE_ENV=package node_modules/.bin/webpack --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
@@ -77,12 +77,9 @@ mix.gzCompression();
 
 // Image Loader Options
 mix.imageLoaderOptions({
-    gifsicle : {},
     mozjpeg  : {
         progressive: true,
-    },
-    optipng  : {},
-    svgo     : {},
+    }
 });
 
 
@@ -94,9 +91,6 @@ mix.sourceMaps();
 mix.js('src/js/script.js', 'assets/js');
 
 mix.babel('src/js/babel-code.js', 'assets/js');
-
-// Sass/Scss Autoload
-mix.sassAutoload(['src/sass/variables.scss', 'src/sass/mixins.scss']);
 
 // Compile SCSS
 mix.sass('src/sass/style.scss', 'assets/css');
