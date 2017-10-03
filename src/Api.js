@@ -93,7 +93,7 @@ class Api {
 
     // Sass Resource Loader
     sassAutoload(files = []) {
-        files                = Object.assign([], Config.sassResources);
+        files                = Object.assign([], Config.sassResources, files);
         Config.sassResources = files;
         return this;
     }
