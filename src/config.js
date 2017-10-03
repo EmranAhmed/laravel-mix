@@ -254,7 +254,7 @@ module.exports = function () {
          * @type {Object}
          */
         uglify : {
-            sourceMap : Mix.isUsing('sourcemaps'),
+            sourceMap : true,
             compress  : {
                 warnings     : false,
                 drop_console : true,

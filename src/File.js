@@ -17,6 +17,25 @@ class File {
     }
 
     // mix.paths.find('file').put(['a', mix.paths.find('file').read(), 'c'])
+
+    /**
+     * Static constructor.
+     *
+     * @param {string} file
+     */
+    static find(file) {
+        return new File(file);
+    }
+
+    /**
+     * Determine if the given file exists.
+     *
+     * @param {string} file
+     */
+    static exists(file) {
+        return fs.existsSync(file);
+    }
+
     // mix.paths.find('file').put(['a', 'src/abcd/.js', 'c'])
     put(contents) {
 
@@ -36,28 +55,10 @@ class File {
     }
 
     /**
-     * Static constructor.
-     *
-     * @param {string} file
-     */
-    static find(file) {
-        return new File(file);
-    }
-
-    /**
      * Get the size of the file.
      */
     size() {
         return fs.statSync(this.path()).size;
-    }
-
-    /**
-     * Determine if the given file exists.
-     *
-     * @param {string} file
-     */
-    static exists(file) {
-        return fs.existsSync(file);
     }
 
     /**
@@ -179,6 +180,8 @@ class File {
      * Read the file's contents.
      */
     read() {
+        const path     = this.path();
+        const realPath = (path.startsWith(Mix.paths.rootPath)) ? path : `${Mix.paths.rootPath}${path}`;
         return fs.readFileSync(this.path(), {
             encoding : 'utf-8'
         });
