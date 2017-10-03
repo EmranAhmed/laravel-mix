@@ -87,6 +87,9 @@ mix.imageLoaderOptions({
 // Enable sourceMap
 mix.sourceMaps();
 
+// version
+mix.version();
+
 // Compile JS
 mix.js('src/js/script.js', 'assets/js');
 

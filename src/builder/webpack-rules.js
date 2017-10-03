@@ -43,12 +43,13 @@ module.exports = function () {
             resources : Config.sassResources,
         }
     }];
+
     rules.push({
         test    : /\.s[ac]ss$/,
         include : /node_modules/,
         exclude : Config.preprocessors.sass ? Config.preprocessors.sass.map(sass => sass.src.path()) : [],
-        //loaders : ['style-loader', 'css-loader', 'sass-loader']
-        loaders : sassLoaders
+        loaders : ['style-loader', 'css-loader', 'sass-loader']
+        //loaders : sassLoaders
     });
 
     // Recognize .less Imports.
