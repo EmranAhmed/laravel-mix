@@ -182,7 +182,7 @@ class File {
     read() {
         const path     = this.path();
         const realPath = (path.startsWith(Mix.paths.rootPath)) ? path : `${Mix.paths.rootPath}${path}`;
-        return fs.readFileSync(this.path(), {
+        return fs.readFileSync(realPath, {
             encoding : 'utf-8'
         });
     }
