@@ -276,7 +276,7 @@ module.exports = function () {
     // Vue styles extraction too, we'll push a new one in.
     // If there were no existing extract text plugins to add our
     // Vue styles extraction too, we'll push a new one in.
-    if (Config.extractVueStyles && ! extractPlugins.length) {
+    if (Config.extractVueStyles) {
         extractPlugins.push(vueExtractPlugin);
     }
 
