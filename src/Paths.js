@@ -7,11 +7,11 @@ class Paths {
     constructor() {
         if (argv['$0'].includes('ava')) {
             this.rootPath = path.resolve(__dirname, '../');
-        } else {
+        }
+        else {
             this.rootPath = path.resolve(__dirname, '../../../');
         }
     }
-
 
     /**
      * Set the root path to resolve webpack.mix.js.
@@ -24,7 +24,6 @@ class Paths {
         return this;
     }
 
-
     /**
      * Determine the path to the user's webpack.mix.js file.
      */
@@ -34,13 +33,15 @@ class Paths {
         );
     }
 
-
     /**
      * Determine the project root.
      *
      * @param {string|null} append
      */
     root(append = '') {
+        if (Array.isArray(append)) {
+            return append.map((f) => path.resolve(this.rootPath, f));
+        }
         return path.resolve(this.rootPath, append);
     }
 }

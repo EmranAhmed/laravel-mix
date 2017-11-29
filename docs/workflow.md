@@ -19,7 +19,7 @@ npm install
 Think of this file as your home base for all front-end configuration.
 
 ```js
-let mix = require('laravel-mix');
+let mix = require('wp-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css');

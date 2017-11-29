@@ -36,20 +36,12 @@ module.exports = function () {
         loaders : ['style-loader', 'css-loader']
     });
 
-    // Recognize .sass resources.
-    let sassLoaders = Config.sassResources.length < 1 ? ['style-loader', 'css-loader', 'sass-loader'] : ['style-loader', 'css-loader', 'sass-loader', {
-        loader  : 'sass-resources-loader',
-        options : {
-            resources : Config.sassResources,
-        }
-    }];
-
+    // Recognize .scss Imports.
     rules.push({
         test    : /\.s[ac]ss$/,
         include : /node_modules/,
         exclude : Config.preprocessors.sass ? Config.preprocessors.sass.map(sass => sass.src.path()) : [],
         loaders : ['style-loader', 'css-loader', 'sass-loader']
-        //loaders : sassLoaders
     });
 
     // Recognize .less Imports.
@@ -164,11 +156,6 @@ module.exports = function () {
 
             tap(new ExtractTextPlugin(outputPath), extractPlugin => {
 
-                let postCssPlugins = Config.postCss;
-                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
-                    postCssPlugins = preprocessor.postCssPlugins;
-                }
-
                 let loaders = [
                     {
                         loader  : 'css-loader',
@@ -184,7 +171,19 @@ module.exports = function () {
                         options : {
                             sourceMap : (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
                             ident     : 'postcss',
-                            plugins   : postCssPlugins
+                            plugins   : (function () {
+                                let plugins = Config.postCss;
+
+                                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
+                                    plugins = preprocessor.postCssPlugins;
+                                }
+
+                                if (Config.autoprefixer) {
+                                    plugins.push(require('autoprefixer'));
+                                }
+
+                                return plugins;
+                            })()
                         }
                     },
                 ];
@@ -224,21 +223,6 @@ module.exports = function () {
         vueExtractPlugin = typeof(Config.extractVueStyles) === "boolean" ? new ExtractTextPlugin('vue-styles.css') : new ExtractTextPlugin(Config.extractVueStyles);
     }
 
-    // Recognize .scss Imports.
-    let vueScssLoaders = Config.sassResources.length < 1 ? ['css-loader', 'sass-loader'] : ['css-loader', 'sass-loader', {
-        loader  : 'sass-resources-loader',
-        options : {
-            resources : Config.sassResources,
-        }
-    }];
-
-    let vueSassLoaders = Config.sassResources.length < 1 ? ['css-loader', 'sass-loader?indentedSyntax'] : ['css-loader', 'sass-loader?indentedSyntax', {
-        loader  : 'sass-resources-loader',
-        options : {
-            resources : Config.sassResources,
-        }
-    }];
-
     rules.push({
         test    : /\.vue$/,
         loader  : 'vue-loader',
@@ -252,12 +236,12 @@ module.exports = function () {
                 },
 
                 scss : vueExtractPlugin.extract({
-                    use      : vueScssLoaders,
+                    use      : 'css-loader!sass-loader',
                     fallback : 'vue-style-loader'
                 }),
 
                 sass : vueExtractPlugin.extract({
-                    use      : vueSassLoaders,
+                    use      : 'css-loader!sass-loader?indentedSyntax',
                     fallback : 'vue-style-loader'
                 }),
 
@@ -290,8 +274,29 @@ module.exports = function () {
 
     // If there were no existing extract text plugins to add our
     // Vue styles extraction too, we'll push a new one in.
-    if (Config.extractVueStyles) {
+    // If there were no existing extract text plugins to add our
+    // Vue styles extraction too, we'll push a new one in.
+    if (Config.extractVueStyles && ! extractPlugins.length) {
         extractPlugins.push(vueExtractPlugin);
+    }
+
+    // If we want to import a global styles file in every component,
+    // use sass resources loader
+    if (Config.extractVueStyles && Config.globalVueStyles) {
+        tap(rules[rules.length - 1].options.loaders, vueLoaders => {
+            vueLoaders.scss.push({
+                loader: 'sass-resources-loader',
+                options: {
+                    resources: Mix.paths.root(Config.globalVueStyles)
+                }
+            });
+            vueLoaders.sass.push({
+                loader: 'sass-resources-loader',
+                options: {
+                    resources: Mix.paths.root(Config.globalVueStyles)
+                }
+            });
+        });
     }
 
     return {rules, extractPlugins};

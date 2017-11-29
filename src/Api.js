@@ -91,17 +91,6 @@ class Api {
         return this;
     }
 
-    // Sass Resource Loader
-    sassAutoload(files = []) {
-        files                = Object.assign([], Config.sassResources, files);
-        Config.sassResources = files;
-        return this;
-    }
-
-    scssAutoload(files = []) {
-        return this.sassAutoload(files);
-    }
-
     postCss(src, output, postCssPlugins = []) {
         Verify.preprocessor('postCss', src, output);
 

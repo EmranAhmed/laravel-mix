@@ -22,8 +22,8 @@ Begin by installing Laravel Mix through NPM or Yarn, and then copying the exampl
 ```bash
 mkdir my-app && cd my-app
 npm init -y
-npm install laravel-mix --save-dev
-cp -r node_modules/laravel-mix/setup/webpack.mix.js ./
+npm install wp-mix --save-dev
+cp -r node_modules/wp-mix/setup/webpack.mix.js ./
 ```
 
 You should now have the following directory structure:
@@ -38,7 +38,7 @@ You should now have the following directory structure:
 Head over to your webpack.mix.js file:
 
 ```js
-let mix = require('laravel-mix');
+let mix = require('wp-mix');
 
 mix.js('src/app.js', 'dist')
    .sass('src/app.scss', 'dist')
@@ -59,9 +59,9 @@ As a tip, consider adding the following NPM scripts to your `package.json` file,
 
 ```js
   "scripts": {
-    "dev": "NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "production": "NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "dev": "NODE_ENV=development webpack --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
+    "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/wp-mix/setup/webpack.config.js",
+    "production": "NODE_ENV=production webpack --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js"
   }
 ```

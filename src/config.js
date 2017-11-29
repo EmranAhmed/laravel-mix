@@ -1,5 +1,6 @@
 let paths        = new (require('./Paths'));
 let webpackMerge = require('webpack-merge');
+let argv         = require('yargs').argv;
 
 module.exports = function () {
     return {
@@ -25,8 +26,6 @@ module.exports = function () {
         gzCompression : false,
 
         modernizrConfig : {},
-
-        sassResources : [],
 
         /**
          * Determine if webpack should be triggered in a production environment.
@@ -97,6 +96,8 @@ module.exports = function () {
          * @type {Boolean}
          */
         hmr : process.argv.includes('--hot'),
+
+        hmrProxy : argv.proxy, // npm run hmr --proxy=http://wp.dev
 
         /**
          * PostCSS plugins to be applied to compiled CSS.
@@ -245,6 +246,15 @@ module.exports = function () {
          * @type {Boolean|string}
          */
         extractVueStyles : false,
+
+        /**
+         * File with global styles to be imported in every component.
+         *
+         * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
+         *
+         * @type {string}
+         */
+        globalVueStyles : '',
 
         /**
          * Uglify-specific settings for Webpack.
