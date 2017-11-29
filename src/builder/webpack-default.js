@@ -35,9 +35,6 @@ module.exports = function () {
             headers: {
                 "Access-Control-Allow-Origin": "*"
             },
-            proxy:{
-                "*": Config.hmrProxy
-            },
             contentBase: path.resolve(Config.publicPath),
             historyApiFallback: true,
             noInfo: true,

@@ -16,6 +16,7 @@ If you've ever been confused about how to get started with module bundling and a
 {
 "scripts": {
     "webpack"        : "cross-env NODE_ENV=development node_modules/.bin/webpack --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
+    "hot"            : "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/wp-mix/setup/webpack.config.js",
     "dev"            : "npm run webpack -- --watch",
     "build"          : "cross-env NODE_ENV=production node_modules/.bin/webpack --progress --hide-modules --config=node_modules/wp-mix/setup/webpack.config.js",
     "bundle"         : "npm run webpack && npm run build",
@@ -81,8 +82,6 @@ mix.imageLoaderOptions({
         progressive: true,
     }
 });
-
-
 
 // Enable sourceMap
 mix.sourceMaps();

@@ -1,6 +1,5 @@
 let paths        = new (require('./Paths'));
 let webpackMerge = require('webpack-merge');
-let argv         = require('yargs').argv;
 
 module.exports = function () {
     return {
@@ -96,8 +95,6 @@ module.exports = function () {
          * @type {Boolean}
          */
         hmr : process.argv.includes('--hot'),
-
-        hmrProxy : argv.proxy, // npm run hmr --proxy=http://wp.dev
 
         /**
          * PostCSS plugins to be applied to compiled CSS.

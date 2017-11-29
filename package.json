@@ -6,7 +6,7 @@
   "scripts": {
     "webpack": "NODE_ENV=development webpack --progress --hide-modules",
     "dev": "NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hmr": "NODE_ENV=development webpack-dev-server --inline --hot --proxy=http://wp.dev",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot",
     "production": "NODE_ENV=production webpack --progress --hide-modules",
     "test": "sudo nyc ava --verbose",
     "posttest": "nyc report --reporter=html"
