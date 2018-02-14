@@ -90,7 +90,7 @@ module.exports = function () {
                 Object.assign({
                     host  : 'localhost',
                     port  : 3000,
-                    proxy : 'wp.dev',
+                    proxy : 'wp.local',
                     files : [
                         '*.php',
                         'assets/js/**/*.js',

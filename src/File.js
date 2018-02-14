@@ -219,7 +219,14 @@ class File {
      */
     minify() {
         if (this.extension() === '.js') {
-            this.write(uglify.minify(this.path(), Config.uglify.uglifyOptions).code);
+            // Config.uglify.uglifyOptions
+            // this.write(uglify.minify(this.path(), Config.uglify.uglifyOptions).code);
+            this.write(uglify.minify(this.read(), {
+                sourceMap : true,
+                compress  : {
+                    drop_console : true,
+                }
+            }).code);
         }
 
         if (this.extension() === '.css') {
