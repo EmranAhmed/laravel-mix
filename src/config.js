@@ -260,10 +260,7 @@ module.exports = function () {
          *
          * @type {Object}
          */
-/*
-v2 options
-
-       uglify : {
+        uglify : {
             sourceMap : true,
             compress  : {
                 warnings     : false,
@@ -272,14 +269,6 @@ v2 options
             output    : {
                 comments : false
             }
-        },*/
-        uglify : {
-            warnings: false,
-            sourceMap : true,
-            compress  : {
-                drop_console : true,
-            },
-            comments : false
         },
 
         /**
