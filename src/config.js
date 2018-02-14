@@ -261,13 +261,15 @@ module.exports = function () {
          * @type {Object}
          */
         uglify : {
-            sourceMap : true,
-            compress  : {
-                warnings     : false,
-                drop_console : true,
-            },
-            output    : {
-                comments : false
+            sourceMap     : true,
+            uglifyOptions : {
+                compress : {
+                    warnings     : false,
+                    drop_console : true,
+                },
+                output   : {
+                    comments : false
+                },
             }
         },
 
