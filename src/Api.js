@@ -16,7 +16,7 @@ class Api {
             //bugReport      : 'https://github.com/EmranAhmed/ultimate-page-builder/issues',
             lastTranslator : 'Emran Ahmed <emran.bd.08@gmail.com>',
             team           : 'ThemeHippo <themehippo@gmail.com>',
-            src            : '*.php',
+            src            : '**/*.php',
             //domain         : 'ultimate-page-builder',
             //destFile       : `languages/ultimate-page-builder.pot`
         }, options);
